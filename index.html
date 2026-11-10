@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>YANXYZ — Web Developer</title>
+<script src="https://cdn.tailwindcss.com/3.4.17"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<script>
+  tailwind.config = {
+    theme: { extend: { fontFamily: { display: ['Sora','ui-sans-serif','system-ui','sans-serif'], sans: ['Inter','ui-sans-serif','system-ui','sans-serif'] } } }
+  }
+</script>
+<style>
+  html { scroll-behavior: smooth; }
+  body { background:#090a0f; color:#e5e7f0; }
+  .glow-bg {
+    position: fixed; inset: 0; z-index: -2; pointer-events: none;
+    background:
+      radial-gradient(ellipse 60% 50% at 50% 38%, rgba(49,46,129,.55), transparent 70%),
+      radial-gradient(ellipse 40% 35% at 62% 48%, rgba(124,58,237,.28), transparent 70%),
+      #090a0f;
+  }
+  #spot {
+    position: fixed; inset: 0; z-index: -1; pointer-events: none;
+    background: radial-gradient(420px circle at var(--x,50%) var(--y,40%), rgba(129,140,248,.14), transparent 70%);
+  }
+  .glass {
+    background: rgba(255,255,255,.04);
+    backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255,255,255,.09);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
+  }
+  .card { transition: transform .35s ease, border-color .35s ease, box-shadow .35s ease; }
+  .card:hover { transform: translateY(-6px); border-color: rgba(129,140,248,.55); box-shadow: 0 12px 40px -10px rgba(99,102,241,.45), inset 0 1px 0 rgba(255,255,255,.08); }
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s ease, transform .8s ease; }
+  .reveal.show { opacity: 1; transform: none; }
+  .caret { display:inline-block; width:2px; height:1em; background:#a5b4fc; margin-left:3px; vertical-align:-.12em; animation: blink 1s steps(1) infinite; }
+  @keyframes blink { 50% { opacity: 0; } }
+  :focus-visible { outline: 2px solid #818cf8; outline-offset: 3px; }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity:1; transform:none; transition:none; }
+    .card, .caret { transition:none; animation:none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body class="font-sans antialiased">
+<div class="glow-bg"></div>
+<div id="spot"></div>
+
+<!-- Navbar -->
+<header class="fixed top-4 inset-x-0 z-50 px-4">
+  <nav class="glass mx-auto max-w-4xl rounded-full flex items-center justify-between px-5 py-2.5">
+    <a href="#top" class="font-display font-bold tracking-tight text-white">YANXYZ<span class="text-indigo-400">.dev</span></a>
+    <ul class="flex items-center gap-1 text-sm text-slate-300">
+      <li><a href="#about" class="px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-white transition">About</a></li>
+      <li><a href="#projects" class="px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-white transition">Projects</a></li>
+      <li><a href="#skills" class="px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-white transition">Skills</a></li>
+      <li><a href="#contact" class="px-3 py-1.5 rounded-full hover:bg-white/10 hover:text-white transition">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+  <!-- Hero -->
+  <section class="min-h-screen flex flex-col items-center justify-center text-center px-5 pt-24 pb-16">
+    <p class="text-sm text-indigo-300/80 mb-5 reveal">Halo, YANXYZ</p>
+    <h1 class="font-display font-bold text-4xl sm:text-6xl leading-tight tracking-tight text-white reveal">
+      Saya seorang<br><span id="typed" class="text-indigo-300"></span><span class="caret" aria-hidden="true"></span>
+    </h1>
+    <p class="mt-6 max-w-xl text-slate-400 reveal">Membangun situs web yang cepat, rapi, dan nyaman dipakai — dari backend Laravel sampai UI/UX yang halus.</p>
+
+    <!-- Kotak interaktif -->
+    <div class="glass reveal w-full max-w-xl rounded-2xl mt-10 p-3 text-left">
+      <form id="hello-form" class="flex items-center gap-2">
+        <input id="hello-input" type="text" autocomplete="off" placeholder="Siapa namamu? Ketik lalu tekan Enter"
+          class="flex-1 bg-transparent px-3 py-2.5 text-slate-100 placeholder-slate-500 focus:outline-none" aria-label="Nama kamu">
+        <button type="submit" class="shrink-0 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white text-sm font-medium px-4 py-2.5 transition">Sapa</button>
+      </form>
+      <p id="hello-out" class="px-3 pt-2 pb-1 text-sm text-slate-300 min-h-[1.75rem]" aria-live="polite"></p>
+      <div class="flex flex-wrap gap-2 px-2 pb-1 pt-1">
+        <button data-quick="Lihat proyek" class="quick glass rounded-full px-3.5 py-1.5 text-xs text-slate-300 hover:text-white hover:border-indigo-400/60 transition">Lihat proyek</button>
+        <button data-quick="Keahlian" class="quick glass rounded-full px-3.5 py-1.5 text-xs text-slate-300 hover:text-white hover:border-indigo-400/60 transition">Keahlian</button>
+        <button data-quick="Ajak kolaborasi" class="quick glass rounded-full px-3.5 py-1.5 text-xs text-slate-300 hover:text-white hover:border-indigo-400/60 transition">Ajak kolaborasi</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- About -->
+  <section id="about" class="mx-auto max-w-3xl px-5 py-24">
+    <div class="glass reveal rounded-3xl p-8 sm:p-10">
+      <h2 class="font-display font-semibold text-2xl text-white mb-4">Tentang saya</h2>
+      <p class="text-slate-400 leading-relaxed">Saya web developer yang suka merapikan hal-hal rumit. Sehari-hari saya mengerjakan aplikasi dengan Laravel, merancang antarmuka dengan Tailwind, dan terus bereksperimen dengan UI/UX supaya produk terasa jelas sejak klik pertama.</p>
+    </div>
+  </section>
+
+  <!-- Projects -->
+  <section id="projects" class="mx-auto max-w-5xl px-5 py-24">
+    <h2 class="font-display font-semibold text-3xl text-white mb-10 reveal">Proyek pilihan</h2>
+    <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <article class="glass card reveal rounded-2xl p-6">
+        <div class="h-32 rounded-xl mb-5 bg-gradient-to-br from-indigo-500/40 to-violet-500/10"></div>
+        <h3 class="font-display font-semibold text-white">Jelajah Desa</h3>
+        <p class="text-sm text-slate-400 mt-2">Situs promosi desa wisata dengan galeri, peta lokasi, dan reservasi paket.</p>
+        <p class="text-xs text-indigo-300 mt-4">PHP · Laravel · Tailwind</p>
+      </article>
+      <article class="glass card reveal rounded-2xl p-6">
+        <div class="h-32 rounded-xl mb-5 bg-gradient-to-br from-sky-500/30 to-indigo-500/10"></div>
+        <h3 class="font-display font-semibold text-white">Kasir Warung</h3>
+        <p class="text-sm text-slate-400 mt-2">Aplikasi kasir sederhana untuk UMKM dengan laporan harian otomatis.</p>
+        <p class="text-xs text-indigo-300 mt-4">PHP · Laravel · MySQL</p>
+      </article>
+      <article class="glass card reveal rounded-2xl p-6">
+        <div class="h-32 rounded-xl mb-5 bg-gradient-to-br from-fuchsia-500/30 to-violet-500/10"></div>
+        <h3 class="font-display font-semibold text-white">Dasbor Belajar</h3>
+        <p class="text-sm text-slate-400 mt-2">Dasbor siswa yang menampilkan progres kelas dan jadwal tugas.</p>
+        <p class="text-xs text-indigo-300 mt-4">PHP · Laravel · MySQL</p>
+      </article>
+      <article class="glass card reveal rounded-2xl p-6">
+        <div class="h-32 rounded-xl mb-5 bg-gradient-to-br from-fuchsia-500/30 to-violet-500/10"></div>
+        <h3 class="font-display font-semibold text-white">Flow A Day</h3>
+        <p class="text-sm text-slate-400 mt-2">Dasbor to do list yang bisa mudah digunakan.</p>
+        <p class="text-xs text-indigo-300 mt-4">PHP · Laravel · MySQL</p>
+      </article>
+      <article class="glass card reveal rounded-2xl p-6">
+        <div class="h-32 rounded-xl mb-5 bg-gradient-to-br from-fuchsia-500/30 to-violet-500/10"></div>
+        <h3 class="font-display font-semibold text-white">Dashboard Penjualan</h3>
+        <p class="text-sm text-slate-400 mt-2">Dasbor untuk memantau performa penjualan secara real-time.</p>
+        <p class="text-xs text-indigo-300 mt-4">Python · Django</p>
+      </article>
+    </div>
+  </section>
+
+  <!-- Skills -->
+  <section id="skills" class="mx-auto max-w-4xl px-5 py-24">
+    <h2 class="font-display font-semibold text-3xl text-white mb-10 reveal">Keahlian</h2>
+    <div class="flex flex-wrap gap-3 reveal">
+      <span class="glass card rounded-full px-5 py-2.5 text-sm">HTML5</span>
+      <span class="glass card rounded-full px-5 py-2.5 text-sm">CSS3</span>
+      <span class="glass card rounded-full px-5 py-2.5 text-sm">Tailwind CSS</span>
+      <span class="glass card rounded-full px-5 py-2.5 text-sm">JavaScript</span>
+      <span class="glass card rounded-full px-5 py-2.5 text-sm">PHP</span>
+      <span class="glass card rounded-full px-5 py-2.5 text-sm">Laravel</span>
+      <span class="glass card rounded-full px-5 py-2.5 text-sm">MySQL</span>
+      <span class="glass card rounded-full px-5 py-2.5 text-sm">Git</span>
+      <span class="glass card rounded-full px-5 py-2.5 text-sm">Figma</span>
+      <span class="glass card rounded-full px-5 py-2.5 text-sm">C++</span>
+      <span class="glass card rounded-full px-5 py-2.5 text-sm">Python</span>
+      <span class="glass card rounded-full px-5 py-2.5 text-sm">Django</span>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="mx-auto max-w-3xl px-5 pt-24 pb-16 text-center">
+    <div class="glass reveal rounded-3xl p-10">
+      <h2 class="font-display font-semibold text-3xl text-white">Punya ide proyek?</h2>
+      <p class="text-slate-400 mt-3">Ceritakan kebutuhanmu.</p>
+      <a href="mailto:halo@giantrizky.dev" class="inline-block mt-7 rounded-full bg-indigo-500 hover:bg-indigo-400 hover:-translate-y-0.5 text-white font-medium px-7 py-3 transition">Kirim email</a>
+      <div class="flex justify-center gap-3 mt-6 text-sm">
+        <a href="https://github.com/Y4NXYZZZ" class="glass rounded-full px-4 py-2 text-slate-300 hover:text-white hover:border-indigo-400/60 transition">GitHub</a>
+        <a href="https://id.linkedin.com/in/giant-rizky-syaputra-411349381" class="glass rounded-full px-4 py-2 text-slate-300 hover:text-white hover:border-indigo-400/60 transition">LinkedIn</a>
+        <a href="https://instagram.com/grzky__" class="glass rounded-full px-4 py-2 text-slate-300 hover:text-white hover:border-indigo-400/60 transition">Instagram</a>
+      </div>
+    </div>
+    <p class="text-xs text-slate-600 mt-10">© 2026 YANXYZ</p>
+  </section>
+</main>
+
+<script>
+  // Typewriter
+  const roles = ['Web Developer', 'Laravel Enthusiast', 'UI/UX Explorer'];
+  const typed = document.getElementById('typed');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let r = 0, c = 0, del = false;
+  function tick() {
+    const word = roles[r];
+    typed.textContent = word.slice(0, c);
+    if (!del && c === word.length) { del = true; return setTimeout(tick, 1600); }
+    if (del && c === 0) { del = false; r = (r + 1) % roles.length; }
+    c += del ? -1 : 1;
+    setTimeout(tick, del ? 40 : 85);
+  }
+  still ? typed.textContent = roles[0] : tick();
+
+  // Spotlight kursor
+  const spot = document.getElementById('spot');
+  addEventListener('pointermove', e => {
+    spot.style.setProperty('--x', e.clientX + 'px');
+    spot.style.setProperty('--y', e.clientY + 'px');
+  });
+
+  // Scroll reveal
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); }
+  }), { threshold: .15 });
+  document.querySelectorAll('.reveal').forEach((el, i) => { el.style.transitionDelay = (i % 3) * 80 + 'ms'; io.observe(el); });
+
+  // Kotak interaktif
+  const out = document.getElementById('hello-out');
+  const input = document.getElementById('hello-input');
+  document.getElementById('hello-form').addEventListener('submit', e => {
+    e.preventDefault();
+    const name = input.value.trim();
+    out.textContent = name ? `Halo, ${name}! Senang bertemu denganmu. Silakan jelajahi proyek saya.` : 'Ketik namamu dulu ya.';
+  });
+  const targets = { 'Lihat proyek': '#projects', 'Keahlian': '#skills', 'Ajak kolaborasi': '#contact' };
+  document.querySelectorAll('.quick').forEach(b => b.addEventListener('click', () => {
+    const t = targets[b.dataset.quick];
+    out.textContent = `Menuju: ${b.dataset.quick}`;
+    document.querySelector(t).scrollIntoView({ behavior: still ? 'auto' : 'smooth' });
+  }));
+</script>
+</body>
+</html>
